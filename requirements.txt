@@ -1,0 +1,8 @@
+# UltronNet v2.0 — Requirements
+# Install with: pip install -r requirements.txt
+
+# Progress bar for file transfers
+tqdm>=4.66.0
+
+# SSL/TLS self-signed certificate generation
+cryptography>=41.0.0
