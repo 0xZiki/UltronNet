@@ -440,8 +440,10 @@ class PTYHandler:
                     pass
 
             if hasattr(signal, "SIGWINCH"):
-                signal.signal(signal.SIGWINCH, _resize_pty)
-
+                try: 
+                   signal.signal(signal.SIGWINCH, _resize_pty)
+                except ValueError:
+                   pass # Ignore if signal handling is not allowed in this thread
             try:
                 while True:
                     r, _, _ = select.select([fd_master, sock], [], [], 0.5)
