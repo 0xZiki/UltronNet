@@ -91,6 +91,8 @@ if platform.system() != "Windows":
     except ImportError:
         pass
 
+TOOL_DIR = Path(__file__).parent.resolve()
+CURRENT_DIR = Path.cwd()
 
 # ─────────────────────────── Config ─────────────────────────────
 @dataclass
@@ -1021,10 +1023,23 @@ class NetCat:
         cert = self.args.cert or CFG.DEFAULT_CERT
         key = self.args.key or CFG.DEFAULT_KEY
 
-        if not Path(cert).exists() or not Path(key).exists():
-            CryptoManager.generate_self_signed(cert, key)
+        # Modification: Create a hidden folder in the user's home directory to store certificates.
+        user_home = Path.home() / ".ultronnet"
+        user_home.mkdir(parents=True, exist_ok=True)
 
-        return cert, key
+        # If a custom path is passed by the user, use it as is.
+        if self.args.cert or self.args.key:
+            cert_path = Path(cert)
+            key_path = Path(key)
+        else:
+            # If default paths are used, save them in the user's home directory.
+            cert_path = user_home / cert
+            key_path = user_home / key
+
+        if not cert_path.exists() or not key_path.exists():
+            CryptoManager.generate_self_signed(str(cert_path), str(key_path))
+
+        return str(cert_path), str(key_path)
 
 
 # ────────────────────────── CLI / Main ──────────────────────────
