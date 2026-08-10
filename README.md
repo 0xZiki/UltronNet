@@ -65,37 +65,37 @@ python UltronNet.py [OPTIONS]
 
 ```bash
 # TCP command shell (server)
-python UltronNet.py -t 0.0.0.0 -p 4444 -l -c
+ultronNet -t 0.0.0.0 -p 4444 -l -c
 
 # TCP connect (client)
-python UltronNet.py -t 192.168.1.10 -p 4444
+ultronNet -t 192.168.1.10 -p 4444
 
 # Full PTY shell (interactive)
-python UltronNet.py -t 0.0.0.0 -p 4444 -l --pty
+ultronNet -t 0.0.0.0 -p 4444 -l --pty
 
 # SSL encrypted shell
-python UltronNet.py -t 0.0.0.0 -p 4444 -l -c --ssl
+ultronNet -t 0.0.0.0 -p 4444 -l -c --ssl
 
 # Upload file (server side)
-python UltronNet.py -t 0.0.0.0 -p 4444 -l -u /tmp/received.bin
+ultronNet -t 0.0.0.0 -p 4444 -l -u /tmp/received.bin
 
 # Send file (client side)
-python UltronNet.py -t 192.168.1.10 -p 4444 --send-file secret.txt
+ultronNet -t 192.168.1.10 -p 4444 --send-file secret.txt
 
 # UDP listener
-python UltronNet.py -t 0.0.0.0 -p 4444 -l --udp
+ultronNet -t 0.0.0.0 -p 4444 -l --udp
 
 # IPv6 shell
-python UltronNet.py -t "::" -p 4444 -l --ipv6 -c
+ultronNet -t "::" -p 4444 -l --ipv6 -c
 
 # Port forwarding: 8080 → 192.168.1.10:80
-python UltronNet.py -t 0.0.0.0 -p 8080 -l --forward 192.168.1.10:80
+ultronNet -t 0.0.0.0 -p 8080 -l --forward 192.168.1.10:80
 
 # Auto-reconnect client
-python UltronNet.py -t 192.168.1.10 -p 4444 --reconnect
+ultronNet -t 192.168.1.10 -p 4444 --reconnect
 
 # Verbose / debug logging
-python UltronNet.py -t 0.0.0.0 -p 4444 -l -c -v
+ultronNet -t 0.0.0.0 -p 4444 -l -c -v
 ```
 
 ---
