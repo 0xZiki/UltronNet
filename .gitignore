@@ -1,0 +1,22 @@
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Packaging & Distribution Artifacts
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Editor & Local Settings
+.vscode/
+.idea/
+
+# Scratch & Temporary Notes
+implementation_plan.md

