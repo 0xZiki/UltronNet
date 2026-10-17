@@ -1,4 +1,4 @@
-# UltronNet v2.1 🛡️
+# UltronNet v2.1 
 
 **Advanced Network Swiss Army Knife & Encrypted Transport Engine** — Python 3.8+
 
@@ -8,7 +8,7 @@
 
 ---
 
-## ⚡ Features
+##  Features
 
 | # | Feature | Capability | Status |
 |---|---------|------------|--------|
@@ -21,7 +21,7 @@
 
 ---
 
-## 📦 Installation & Setup
+##  Installation & Setup
 
 Install UltronNet in editable development mode to register the `ultronnet` command system-wide:
 
@@ -33,7 +33,7 @@ pip install -e . --break-system-packages
 
 ---
 
-## 🚀 Usage
+##  Usage
 
 You can run UltronNet directly from anywhere in your terminal via the installed binary, or execute the root runner:
 
@@ -74,7 +74,7 @@ ultronnet [OPTIONS]
 
 ---
 
-## 💡 Practical Examples
+##  Practical Examples
 
 ```bash
 # 1. Spawn a full interactive PTY listener
@@ -98,7 +98,7 @@ ultronnet -l -p 5353 --udp
 
 ---
 
-## 🏗️ Modular Architecture (v2.1)
+##  Modular Architecture (v2.1)
 
 ```text
 UltronNet/
@@ -126,7 +126,7 @@ UltronNet/
 
 ---
 
-## ⚠️ Legal Disclaimer
+##  Legal Disclaimer
 
 > This tool is developed for **authorized penetration testing, red teaming operations, and educational research only**.  
 > Unauthorized use against target systems without explicit prior written consent is strictly prohibited.
